@@ -3,9 +3,15 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EasyBus.Migrations
 {
-    public partial class AddedBusStopsModel : Migration
+    public partial class RemovedBusStopModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "BusStops");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "BusStops",
@@ -13,10 +19,10 @@ namespace EasyBus.Migrations
                 {
                     Id = table.Column<long>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BusId = table.Column<long>(type: "int", nullable: true),
-                    StopId = table.Column<long>(type: "int", nullable: true),
                     ArrivalTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DepartureTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    BusId = table.Column<long>(type: "int", nullable: true),
+                    DepartureTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StopId = table.Column<long>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,12 +50,6 @@ namespace EasyBus.Migrations
                 name: "IX_BusStops_StopId",
                 table: "BusStops",
                 column: "StopId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "BusStops");
         }
     }
 }

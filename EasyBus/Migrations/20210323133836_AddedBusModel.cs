@@ -10,7 +10,7 @@ namespace EasyBus.Migrations
                 name: "Buses",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     VehicleNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Capacity = table.Column<short>(type: "smallint", nullable: false),

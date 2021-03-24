@@ -11,11 +11,11 @@ namespace EasyBus.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     User = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ArrivalStopId = table.Column<long>(type: "bigint", nullable: true),
-                    DepartureStopId = table.Column<long>(type: "bigint", nullable: true),
+                    ArrivalStopId = table.Column<long>(type: "int", nullable: true),
+                    DepartureStopId = table.Column<long>(type: "int", nullable: true),
                     Fare = table.Column<long>(type: "bigint", nullable: false),
                     DateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NumberOfSeats = table.Column<int>(type: "int", nullable: false)
