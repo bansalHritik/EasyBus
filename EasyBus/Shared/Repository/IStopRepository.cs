@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EasyBus.Shared.Repository
 {
-    public interface IStopRepository
+    public interface IStopRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
     }
 }

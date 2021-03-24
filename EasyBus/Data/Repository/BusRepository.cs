@@ -4,7 +4,7 @@ using EasyBus.Shared.Repository;
 
 namespace EasyBus.Data.Repository
 {
-    public class BusRepository : Repository<Bus>, IBusRepository
+    public class BusRepository : Repository<Bus>, IBusRepository<Bus>
     {
         public BusRepository(ApplicationContext context) : base(context) { }
 
