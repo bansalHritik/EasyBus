@@ -1,4 +1,5 @@
-﻿using EasyBus.Shared.Repository;
+﻿using EasyBus.Data.Contexts;
+using EasyBus.Shared.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,11 @@ namespace EasyBus.Data.Repository
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext Context;
+
+        public ApplicationContext ApplicationContext
+        {
+            get { return Context as ApplicationContext; }
+        }
 
         public Repository(DbContext context)
         {

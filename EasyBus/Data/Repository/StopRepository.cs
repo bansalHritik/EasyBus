@@ -8,9 +8,6 @@ namespace EasyBus.Data.Repository
     {
         public StopRepository(ApplicationContext context) : base(context) { }
 
-        public ApplicationContext ApplicationContext
-        {
-            get { return Context as ApplicationContext; }
-        }
+        
     }
 }
