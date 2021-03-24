@@ -1,13 +1,15 @@
 ﻿namespace EasyBus.Persistence
 {
     using EasyBus.Data.Contexts;
+    using EasyBus.Data.Models;
     using EasyBus.Data.Repository;
     using EasyBus.Shared.Repository;
+    using EasyBus.Shared.Repository.Core;
 
     /// <summary>
     /// Defines the <see cref="UnitOfWork" />.
     /// </summary>
-    public class UnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         /// <summary>
         /// Defines Application Context file.
@@ -23,29 +25,32 @@
             _context = context;
             Buses = new BusRepository(_context);
             Stops = new StopRepository(_context);
-            BusStops = new BusStopRepository(_context);
+            Routes = new RouteRepository(_context);
+            BusRoutes = new BusRouteRepository(_context);
             Bookings = new BookingRepository(_context);
         }
 
         /// <summary>
         /// Gets or sets the Buses.
         /// </summary>
-        public IBusRepository Buses { get; }
+        public IBusRepository<Bus> Buses { get; }
 
         /// <summary>
         /// Gets or sets the Stops.
         /// </summary>
-        public IStopRepository Stops { get; }
+        public IStopRepository<Stop> Stops { get; }
 
         /// <summary>
         /// Gets or sets the BusStops.
         /// </summary>
-        public IBusStopRepository BusStops { get; }
+        public IBusRouteRepository<BusRoute> BusRoutes { get; }
 
         /// <summary>
         /// Gets or sets the Bookings.
         /// </summary>
-        public IBookingRepository Bookings { get; }
+        public IBookingRepository<Booking> Bookings { get; }
+
+        public IRouteRepository<Route> Routes { get; }
 
         /// <summary>
         /// The Complete.
