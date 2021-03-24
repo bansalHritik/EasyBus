@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EasyBus.Models
+namespace EasyBus.Data.Models
 {
     public class Stop
     {

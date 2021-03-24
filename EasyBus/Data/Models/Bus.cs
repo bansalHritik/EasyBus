@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EasyBus.EntityDataModels.Models
+namespace EasyBus.Data.Models
 {
     public class Bus
     {
@@ -30,8 +30,8 @@ namespace EasyBus.EntityDataModels.Models
         /// <summary>
         /// Denotes operator or owner of the bus.
         /// </summary>
-         public string Operator { get; set; }
-         //public virtual User User;
+        public string Operator { get; set; }
+        //public virtual User User;
 
         /// <summary>
         /// Any other details or description of the bus.

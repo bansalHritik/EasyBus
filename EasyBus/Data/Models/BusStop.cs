@@ -1,7 +1,7 @@
-﻿using EasyBus.EntityDataModels.Models;
+﻿using EasyBus.Data.Models;
 using System;
 
-namespace EasyBus.Models
+namespace EasyBus.Data.Models
 {
     public class BusStop
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyBus.Models
+namespace EasyBus.Data.Models
 {
     public class Booking
     {

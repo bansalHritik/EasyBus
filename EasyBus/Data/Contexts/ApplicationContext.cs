@@ -1,13 +1,7 @@
-﻿using EasyBus.EntityDataModels.Models;
-using EasyBus.Models;
+﻿using EasyBus.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EasyBus.EntityDataModels.Contexts
+namespace EasyBus.Data.Contexts
 {
     public class ApplicationContext : DbContext
     {
