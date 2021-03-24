@@ -7,7 +7,7 @@ namespace EasyBus.Data.Models
         /// <summary>
         /// Unique ID for each stop
         /// </summary>
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Name of the stop

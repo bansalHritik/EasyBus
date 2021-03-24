@@ -4,7 +4,8 @@ namespace EasyBus.Data.Models
 {
     public class Booking
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
+
         public string User { get; set; }
 
         public Stop ArrivalStop { get; set; }

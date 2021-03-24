@@ -9,7 +9,7 @@ namespace EasyBus.Data.Models
         /// Denotes unique identification number of the bus. 
         /// </summary>
         [Key]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Denotes government registered vechile number.
