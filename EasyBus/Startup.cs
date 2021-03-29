@@ -1,18 +1,20 @@
-using EasyBus.EntityDataModels.Contexts;
+using EasyBus.Business;
+using EasyBus.Data.Contexts;
+using EasyBus.Persistence;
+using EasyBus.Shared.Functional.Profiles;
+using EasyBus.Shared.Infrastructure.Business;
+using EasyBus.Shared.Repository.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace EasyBus
 {
@@ -28,17 +30,62 @@ namespace EasyBus
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
-            
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
+                };
+            });
+
+
+            services.AddDbContext<ApplicationContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("ApplicationContext")));
+
+
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<ApplicationContext>()
+                .AddDefaultTokenProviders();
+
+
+            services.AddAutoMapper(m =>
+            {
+                m.AddProfile<BookingMappingProfile>();
+                m.AddProfile<BusMappingProfile>();
+                m.AddProfile<BusRouteMappingProfile>();
+                m.AddProfile<RouteMappingProfile>();
+                m.AddProfile<StopMappingProfile>();
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasyBus", Version = "v1" });
             });
 
-            services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationContext")));
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IBusBDC, BusBDC>();
+            services.AddTransient<IStopBDC, StopBDC>();
+            services.AddTransient<IRouteBDC, RouteBDC>();
+            services.AddTransient<IBusRouteBDC, BusRouteBDC>();
+            services.AddTransient<UserManager<ApplicationUser>>();
+
+
 
         }
 
@@ -55,6 +102,8 @@ namespace EasyBus
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

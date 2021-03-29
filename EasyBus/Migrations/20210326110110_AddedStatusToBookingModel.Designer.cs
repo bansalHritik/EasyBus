@@ -4,14 +4,16 @@ using EasyBus.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EasyBus.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210326110110_AddedStatusToBookingModel")]
+    partial class AddedStatusToBookingModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,11 +28,20 @@ namespace EasyBus.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BusRouteId")
+                    b.Property<int?>("ArrivalStopId")
                         .HasColumnType("int");
 
-                    b.Property<short>("NumberOfSeats")
-                        .HasColumnType("smallint");
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartureStopId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("Fare")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("NumberOfSeats")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -40,7 +51,9 @@ namespace EasyBus.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BusRouteId");
+                    b.HasIndex("ArrivalStopId");
+
+                    b.HasIndex("DepartureStopId");
 
                     b.ToTable("Bookings");
                 });
@@ -147,11 +160,17 @@ namespace EasyBus.Migrations
 
             modelBuilder.Entity("EasyBus.Data.Models.Booking", b =>
                 {
-                    b.HasOne("EasyBus.Data.Models.BusRoute", "BusRoute")
+                    b.HasOne("EasyBus.Data.Models.Stop", "ArrivalStop")
                         .WithMany()
-                        .HasForeignKey("BusRouteId");
+                        .HasForeignKey("ArrivalStopId");
 
-                    b.Navigation("BusRoute");
+                    b.HasOne("EasyBus.Data.Models.Stop", "DepartureStop")
+                        .WithMany()
+                        .HasForeignKey("DepartureStopId");
+
+                    b.Navigation("ArrivalStop");
+
+                    b.Navigation("DepartureStop");
                 });
 
             modelBuilder.Entity("EasyBus.Data.Models.BusRoute", b =>

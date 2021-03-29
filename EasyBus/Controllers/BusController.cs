@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using EasyBus.Data.Models;
+using EasyBus.Models;
+using EasyBus.Shared.Functional;
+using EasyBus.Shared.Infrastructure.Business;
+using EasyBus.Shared.Infrastructure.DTOs;
+using EasyBus.Shared.Repository.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EasyBus.Controllers
 {
@@ -11,6 +15,132 @@ namespace EasyBus.Controllers
     [ApiController]
     public class BusController : ControllerBase
     {
-        
+        #region Properties
+
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IBusBDC BusBDC;
+
+        #endregion Properties
+
+        #region Private Response handling methods.
+
+        private IActionResult GetResponse<T>(OperationResult<T> operationResult)
+        {
+            IActionResult result = null;
+            switch (operationResult.Status)
+            {
+                case OperationResultStatusType.Success:
+                    result = Ok(operationResult.Data);
+                    break;
+
+                case OperationResultStatusType.Failed:
+                    result = BadRequest(operationResult.ErrorMessage);
+                    break;
+
+                case OperationResultStatusType.Exception:
+                    result = StatusCode(StatusCodes.Status500InternalServerError);
+                    break;
+            }
+            return result;
+        }
+
+        private IActionResult GetResponse(OperationResult operationResult)
+        {
+            IActionResult result = null;
+            switch (operationResult.Status)
+            {
+                case OperationResultStatusType.Success:
+                    result = Ok();
+                    break;
+
+                case OperationResultStatusType.Failed:
+                    result = BadRequest(operationResult.ErrorMessage);
+                    break;
+
+                case OperationResultStatusType.Exception:
+                    result = StatusCode(StatusCodes.Status500InternalServerError);
+                    break;
+            }
+            return result;
+        }
+
+        #endregion Private Response handling methods.
+
+        #region Constructors
+
+        public BusController(IUnitOfWork unitOfWork, IMapper mapper, IBusBDC busBDC)
+        {
+            this.unitOfWork = unitOfWork;
+            _mapper = mapper;
+            BusBDC = busBDC;
+        }
+
+        #endregion Constructors
+
+        #region Public API Methods
+
+        [HttpPost]
+        public IActionResult New(NewBusModel newBus)
+        {
+            BusDTO busDTO = new()
+            {
+                Capacity = newBus.Capacity,
+                Description = newBus.Description,
+                Operator = newBus.Operator,
+                SeatsBooked = newBus.SeatsBooked,
+                VehicleNumber = newBus.VechileNumber,
+            };
+            OperationResult result = BusBDC.Add(busDTO);
+            IActionResult response = null;
+            if (result.Status == OperationResultStatusType.Success)
+            {
+                response = CreatedAtAction(nameof(Get), busDTO);
+            }
+            return response;
+            // return GetResponse(result);
+        }
+
+        [HttpGet]
+        public IActionResult Get(int id)
+        {
+            OperationResult<BusDTO> result = BusBDC.Get(id);
+            IActionResult response = GetResponse(result);
+            return response;
+        }
+
+        [HttpGet]
+        [Route("GetAll")]
+        public IActionResult GetAll()
+        {
+            OperationResult<IEnumerable<BusDTO>> result = BusBDC.GetAll();
+            IActionResult response = GetResponse(result);
+            return response;
+        }
+
+        // TODO: ONLY ADMIN
+        [HttpPut]
+        public IActionResult UpdateBus(int id, NewBusModel newBus)
+        {
+            BusDTO bus = new()
+            {
+                Capacity = newBus.Capacity,
+                Description = newBus.Description,
+                Operator = newBus.Operator,
+                SeatsBooked = newBus.SeatsBooked,
+                VehicleNumber = newBus.VechileNumber
+            };
+            OperationResult result = BusBDC.Update(id, bus);
+            return GetResponse(result);
+        }
+
+        [HttpDelete]
+        public IActionResult Remove(int id)
+        {
+            OperationResult result = BusBDC.Remove(id);
+            return GetResponse(result);
+        }
+
+        #endregion Public API Methods
     }
 }

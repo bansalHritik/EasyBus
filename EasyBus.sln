@@ -5,6 +5,22 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyBus", "EasyBus\EasyBus.csproj", "{78DCF64E-9B90-41EA-B481-ECE8C1758361}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Business Layer", "2. Business Layer", "{E69147E9-E743-4CE7-9807-277C70B5DD67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Shared layer", "4. Shared layer", "{84331D46-CDAB-4D00-A8C8-A6B865166DB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Data Layer", "3. Data Layer", "{CF947C6D-94F9-4CB4-B738-9D0D35015222}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Presentation Layer", "1. Presentation Layer", "{92EBD01A-019E-45CE-8150-0B6229E7E55E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Testing Layer", "5. Testing Layer", "{6B5484DC-3EE1-4591-87E6-8DAB7BDDC2AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyBus.Shared", "EasyBus.Shared\EasyBus.Shared.csproj", "{A861EF76-D167-4961-8E2D-446C4D7CD60D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyBus.DAL", "EasyBus.DAL\EasyBus.DAL.csproj", "{B8AC7EAF-4363-46FC-A72D-4B3A5471E914}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyBus.Business", "EasyBus.Business\EasyBus.Business.csproj", "{D34E3405-2E75-4EE3-8745-316F35A3A282}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +31,27 @@ Global
 		{78DCF64E-9B90-41EA-B481-ECE8C1758361}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78DCF64E-9B90-41EA-B481-ECE8C1758361}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78DCF64E-9B90-41EA-B481-ECE8C1758361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A861EF76-D167-4961-8E2D-446C4D7CD60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A861EF76-D167-4961-8E2D-446C4D7CD60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A861EF76-D167-4961-8E2D-446C4D7CD60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A861EF76-D167-4961-8E2D-446C4D7CD60D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8AC7EAF-4363-46FC-A72D-4B3A5471E914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8AC7EAF-4363-46FC-A72D-4B3A5471E914}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8AC7EAF-4363-46FC-A72D-4B3A5471E914}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8AC7EAF-4363-46FC-A72D-4B3A5471E914}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D34E3405-2E75-4EE3-8745-316F35A3A282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D34E3405-2E75-4EE3-8745-316F35A3A282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D34E3405-2E75-4EE3-8745-316F35A3A282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D34E3405-2E75-4EE3-8745-316F35A3A282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{78DCF64E-9B90-41EA-B481-ECE8C1758361} = {92EBD01A-019E-45CE-8150-0B6229E7E55E}
+		{A861EF76-D167-4961-8E2D-446C4D7CD60D} = {84331D46-CDAB-4D00-A8C8-A6B865166DB3}
+		{B8AC7EAF-4363-46FC-A72D-4B3A5471E914} = {CF947C6D-94F9-4CB4-B738-9D0D35015222}
+		{D34E3405-2E75-4EE3-8745-316F35A3A282} = {E69147E9-E743-4CE7-9807-277C70B5DD67}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BC16DC3-D418-4A65-8833-EA88509316EC}
