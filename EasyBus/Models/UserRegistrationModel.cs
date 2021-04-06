@@ -1,4 +1,4 @@
-﻿namespace EasyBus.Controllers
+﻿namespace EasyBus.Models
 {
     public class UserRegistrationModel
     {

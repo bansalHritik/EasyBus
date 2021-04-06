@@ -1,4 +1,5 @@
 using EasyBus.Business;
+using EasyBus.Configuration;
 using EasyBus.Data.Contexts;
 using EasyBus.Persistence;
 using EasyBus.Shared.Functional.Profiles;
@@ -30,8 +31,21 @@ namespace EasyBus
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            // for loading JwtConfig as dependency
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
 
+            // adding cors policies
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                    .WithHeaders("Content-Type", "Authorization");
+                });
+            });
+
+
+            // adding Authentication with JWT Scheme
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -40,29 +54,33 @@ namespace EasyBus
             })
             .AddJwtBearer(options =>
             {
+                var key = Encoding.UTF8.GetBytes(Configuration["JwtConfig:Secret"]);
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = Configuration["JWT:ValidAudience"],
-                    ValidIssuer = Configuration["JWT:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateLifetime = true,
+                    RequireExpirationTime = false,
                 };
             });
 
-
+            // adding dbContexts
             services.AddDbContext<ApplicationContext>(
-                options => options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationContext")));
+               options => options.UseSqlServer(
+                   Configuration.GetConnectionString("ApplicationContext")));
 
+            // for identity framework with authentication
+            services.AddDefaultIdentity<ApplicationUser>(options => 
+                options.SignIn.RequireConfirmedAccount = false
+            )
+            .AddEntityFrameworkStores<ApplicationContext>();
 
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddEntityFrameworkStores<ApplicationContext>()
-                .AddDefaultTokenProviders();
-
-
+            services.AddControllers();
+            
+            // adding profiles for automapper
             services.AddAutoMapper(m =>
             {
                 m.AddProfile<BookingMappingProfile>();
@@ -77,16 +95,14 @@ namespace EasyBus
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EasyBus", Version = "v1" });
             });
 
-
+            //adding Dependencies
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IBusBDC, BusBDC>();
             services.AddTransient<IStopBDC, StopBDC>();
             services.AddTransient<IRouteBDC, RouteBDC>();
+            services.AddTransient<IBookingBDC, BookingBDC>();
             services.AddTransient<IBusRouteBDC, BusRouteBDC>();
             services.AddTransient<UserManager<ApplicationUser>>();
-
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +118,8 @@ namespace EasyBus
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 

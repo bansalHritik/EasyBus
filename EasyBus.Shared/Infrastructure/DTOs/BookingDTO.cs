@@ -1,16 +1,19 @@
-﻿using System;
-
-namespace EasyBus.Shared.Infrastructure.DTOs
+﻿namespace EasyBus.Shared.Infrastructure.DTOs
 {
     public class BookingDTO
     {
-        public int ArrivalStopId { get; set; }
+        public int Id { get; set; }
+        public BusRouteDTO BusRoute { get; set; }
 
-        public int DepartureStopId { get; set; }
+        public string PassengerName { get; set; }
 
-        public DateTime DateAndTime { get; set; }
+        public int Age { get; set; }
 
-        public short NumberOfSeats { get; set; }
+        public string Email { get; set; }
+
+        public string MobileNumber { get; set; }
+
+        public string IdProof { get; set; }
 
         public int BusId { get; set; }
     }

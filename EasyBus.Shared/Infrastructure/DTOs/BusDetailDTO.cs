@@ -4,6 +4,7 @@ namespace EasyBus.Shared.Infrastructure.DTOs
 {
     public class BusDetailDTO
     {
+        public int Id { get; set; }
         public DateTime ArrivalTime { get; set; }
 
         public DateTime DepartureTime { get; set; }

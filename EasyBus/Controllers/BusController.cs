@@ -23,49 +23,7 @@ namespace EasyBus.Controllers
 
         #endregion Properties
 
-        #region Private Response handling methods.
-
-        private IActionResult GetResponse<T>(OperationResult<T> operationResult)
-        {
-            IActionResult result = null;
-            switch (operationResult.Status)
-            {
-                case OperationResultStatusType.Success:
-                    result = Ok(operationResult.Data);
-                    break;
-
-                case OperationResultStatusType.Failed:
-                    result = BadRequest(operationResult.ErrorMessage);
-                    break;
-
-                case OperationResultStatusType.Exception:
-                    result = StatusCode(StatusCodes.Status500InternalServerError);
-                    break;
-            }
-            return result;
-        }
-
-        private IActionResult GetResponse(OperationResult operationResult)
-        {
-            IActionResult result = null;
-            switch (operationResult.Status)
-            {
-                case OperationResultStatusType.Success:
-                    result = Ok();
-                    break;
-
-                case OperationResultStatusType.Failed:
-                    result = BadRequest(operationResult.ErrorMessage);
-                    break;
-
-                case OperationResultStatusType.Exception:
-                    result = StatusCode(StatusCodes.Status500InternalServerError);
-                    break;
-            }
-            return result;
-        }
-
-        #endregion Private Response handling methods.
+        
 
         #region Constructors
 
@@ -98,14 +56,13 @@ namespace EasyBus.Controllers
                 response = CreatedAtAction(nameof(Get), busDTO);
             }
             return response;
-            // return GetResponse(result);
         }
 
         [HttpGet]
         public IActionResult Get(int id)
         {
             OperationResult<BusDTO> result = BusBDC.Get(id);
-            IActionResult response = GetResponse(result);
+            IActionResult response = this.GetResponse(result);
             return response;
         }
 
@@ -114,7 +71,7 @@ namespace EasyBus.Controllers
         public IActionResult GetAll()
         {
             OperationResult<IEnumerable<BusDTO>> result = BusBDC.GetAll();
-            IActionResult response = GetResponse(result);
+            IActionResult response = this.GetResponse(result);
             return response;
         }
 
@@ -131,14 +88,14 @@ namespace EasyBus.Controllers
                 VehicleNumber = newBus.VechileNumber
             };
             OperationResult result = BusBDC.Update(id, bus);
-            return GetResponse(result);
+            return this.GetResponse(result);
         }
 
         [HttpDelete]
         public IActionResult Remove(int id)
         {
             OperationResult result = BusBDC.Remove(id);
-            return GetResponse(result);
+            return this.GetResponse(result);
         }
 
         #endregion Public API Methods

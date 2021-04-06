@@ -3,8 +3,13 @@ using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
 using EasyBus.Shared.Infrastructure.DTOs;
 using EasyBus.Shared.Repository.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace EasyBus.Controllers
 {
@@ -13,50 +18,6 @@ namespace EasyBus.Controllers
     public class BusRouteController : ControllerBase
     {
         private readonly IBusRouteBDC BusRouteBDC;
-
-        #region Private Response handling methods.
-
-        private IActionResult GetResponse<T>(OperationResult<T> operationResult)
-        {
-            IActionResult result = null;
-            switch (operationResult.Status)
-            {
-                case OperationResultStatusType.Success:
-                    result = Ok(operationResult.Data);
-                    break;
-
-                case OperationResultStatusType.Failed:
-                    result = BadRequest(operationResult.ErrorMessage);
-                    break;
-
-                case OperationResultStatusType.Exception:
-                    result = StatusCode(StatusCodes.Status500InternalServerError);
-                    break;
-            }
-            return result;
-        }
-
-        private IActionResult GetResponse(OperationResult operationResult)
-        {
-            IActionResult result = null;
-            switch (operationResult.Status)
-            {
-                case OperationResultStatusType.Success:
-                    result = Ok();
-                    break;
-
-                case OperationResultStatusType.Failed:
-                    result = BadRequest(operationResult.ErrorMessage);
-                    break;
-
-                case OperationResultStatusType.Exception:
-                    result = StatusCode(StatusCodes.Status500InternalServerError);
-                    break;
-            }
-            return result;
-        }
-
-        #endregion Private Response handling methods.
 
         #region Constructor
 
@@ -74,18 +35,19 @@ namespace EasyBus.Controllers
         [HttpGet]
         public IActionResult Get(int id)
         {
-            return GetResponse(BusRouteBDC.Get(id));
+            return this.GetResponse(BusRouteBDC.Get(id));
         }
 
         [HttpGet("all")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAll()
         {
-            return GetResponse(BusRouteBDC.GetAll());
+            return this.GetResponse(BusRouteBDC.GetAll());
         }
-        [HttpGet("WIthOption")]
-        public IActionResult GetAll([FromQuery]BusSearchOption option)
+        [HttpPost("WIthOption")]
+        public IActionResult GetAll([FromBody]BusSearchOption option)
         {
-            return GetResponse(BusRouteBDC.GetAllBuses(option));
+            return this.GetResponse(BusRouteBDC.GetAllBuses(option));
         }
 
         #endregion Get Methods
@@ -94,20 +56,20 @@ namespace EasyBus.Controllers
         [HttpPost]
         public IActionResult Add([FromBody]NewBusRouteModel newBusRoute)
         {
-            return GetResponse(BusRouteBDC.Add(newBusRoute));
+            return this.GetResponse(BusRouteBDC.Add(newBusRoute));
         }
         #endregion
 
         [HttpPut]
         public IActionResult Update(int busRouteId,[FromBody] NewBusRouteModel newBusRoute)
         {
-            return GetResponse(BusRouteBDC.Update(busRouteId, newBusRoute));
+            return this.GetResponse(BusRouteBDC.Update(busRouteId, newBusRoute));
         }
 
         [HttpDelete]
         public IActionResult Delete(int busRouteId)
         {
-            return GetResponse(BusRouteBDC.Remove(busRouteId));
+            return this.GetResponse(BusRouteBDC.Remove(busRouteId));
         }
 
         #endregion Api Methods

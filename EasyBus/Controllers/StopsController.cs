@@ -2,11 +2,14 @@
 using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
 using EasyBus.Shared.Infrastructure.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EasyBus.Controllers
@@ -72,9 +75,12 @@ namespace EasyBus.Controllers
             return GetResponse(StopBDC.Get(id));
         }
 
+        
         [HttpGet("GetAll")]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAll()
-        {
+       {
+            
             return GetResponse(StopBDC.GetAll());
         }
 
