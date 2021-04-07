@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyBus.DAL.Interfaces.Repository;
+using System;
 
 namespace EasyBus.Shared.Repository.Core
 {
@@ -9,6 +10,8 @@ namespace EasyBus.Shared.Repository.Core
         IRouteRepository Routes { get; }
         IBusRouteRepository BusRoutes { get; }
         IBookingRepository Bookings { get; }
+
+        IUserRepository Users { get; }
 
         int Complete();
     }

@@ -33,7 +33,7 @@ namespace EasyBus.Controllers
         }
 
         [HttpGet("all")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        
         public IActionResult GetAll()
         {
             return this.GetResponse(BusRouteBDC.GetAll());

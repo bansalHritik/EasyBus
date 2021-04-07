@@ -1,5 +1,7 @@
 ﻿using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBus.Controllers
@@ -16,17 +18,20 @@ namespace EasyBus.Controllers
         }
 
         // api/booking/get
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("Get")]
         public IActionResult Get(int bookingId)
         {
             return this.GetResponse(bookingBDC.Get(bookingId));
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         // api/booking/byUser
         [HttpGet("ByUser")]
         public IActionResult GetBookingsByUsers()
         {
-            return this.GetResponse(bookingBDC.GetAllBookingByUser());
+            string currentUserId = this.GetCurrentUser();
+            return this.GetResponse(bookingBDC.GetAllBookingByUser(currentUserId));
         }
 
         // api/booking/getAll
@@ -38,9 +43,11 @@ namespace EasyBus.Controllers
 
         // api/booking/new
         [HttpPost("New")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult NewBooking(NewBookingModel newBooking)
         {
-            return this.GetResponse(bookingBDC.AddBooking(newBooking));
+            string currentUserId = this.GetCurrentUser();
+            return this.GetResponse(bookingBDC.AddBooking(newBooking, currentUserId));
         }
     }
 }

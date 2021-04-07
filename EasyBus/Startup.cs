@@ -1,4 +1,6 @@
 using EasyBus.Business;
+using EasyBus.Business.Business_Data_Components;
+using EasyBus.Business.Business_Data_Components.Interfaces.Business;
 using EasyBus.Configuration;
 using EasyBus.Data.Contexts;
 using EasyBus.Persistence;
@@ -15,6 +17,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace EasyBus
@@ -50,7 +54,6 @@ namespace EasyBus
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -73,13 +76,13 @@ namespace EasyBus
                    Configuration.GetConnectionString("ApplicationContext")));
 
             // for identity framework with authentication
-            services.AddDefaultIdentity<ApplicationUser>(options => 
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 options.SignIn.RequireConfirmedAccount = false
             )
             .AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddControllers();
-            
+
             // adding profiles for automapper
             services.AddAutoMapper(m =>
             {
@@ -88,6 +91,7 @@ namespace EasyBus
                 m.AddProfile<BusRouteMappingProfile>();
                 m.AddProfile<RouteMappingProfile>();
                 m.AddProfile<StopMappingProfile>();
+                m.AddProfile<UserMappingProfile>();
             });
 
             services.AddSwaggerGen(c =>
@@ -102,7 +106,9 @@ namespace EasyBus
             services.AddTransient<IRouteBDC, RouteBDC>();
             services.AddTransient<IBookingBDC, BookingBDC>();
             services.AddTransient<IBusRouteBDC, BusRouteBDC>();
+            services.AddTransient<RoleManager<IdentityRole>>();
             services.AddTransient<UserManager<ApplicationUser>>();
+            services.AddTransient<IUserBDC, UserBDC>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -7,7 +7,7 @@ namespace EasyBus.Shared.Infrastructure.Business
 {
     public interface IBookingBDC
     {
-        OperationResult AddBooking(NewBookingModel booking);
+        OperationResult AddBooking(NewBookingModel booking, string userId);
 
         OperationResult CancelBooking(int bookingId);
 
@@ -16,7 +16,7 @@ namespace EasyBus.Shared.Infrastructure.Business
         public OperationResult<BookingDTO> Get(int bookingId);
 
 
-        public OperationResult<IEnumerable<BookingDTO>> GetAllBookingByUser();
+        public OperationResult<IEnumerable<BookingDTO>> GetAllBookingByUser(string userId);
 
         public OperationResult<IEnumerable<BookingDTO>> GetAll();
     }

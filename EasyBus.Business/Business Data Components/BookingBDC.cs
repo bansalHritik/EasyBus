@@ -51,7 +51,7 @@ namespace EasyBus.Business
             return result;
         }
 
-        public OperationResult AddBooking(NewBookingModel newBooking)
+        public OperationResult AddBooking(NewBookingModel newBooking, string userId)
         {
             OperationResult result = new();
             try
@@ -62,6 +62,7 @@ namespace EasyBus.Business
                 {
                     Booking booking = Mapper.Map<NewBookingModel, Booking>(newBooking);
                     booking.BusRoute = busRoute;
+                    booking.ByUser = userId;
 
                     UnitOfWork.Bookings.Add(booking);
 
@@ -74,7 +75,6 @@ namespace EasyBus.Business
                         result.SetSuccessResult();
                     }
                     else result.SetFailureResult("Bus is already fully booked");
-                    
                 }
                 else
                 {
@@ -133,14 +133,14 @@ namespace EasyBus.Business
             return result;
         }
 
-        //TODO: 
-        public OperationResult<IEnumerable<BookingDTO>> GetAllBookingByUser()
+        public OperationResult<IEnumerable<BookingDTO>> GetAllBookingByUser(string userId)
         {
             OperationResult<IEnumerable<BookingDTO>> result = new();
             try
             {
-                var bookings = UnitOfWork.Bookings.GetAll()
-                    .Select(m => Mapper.Map<Booking, BookingDTO>(m));
+                var bookings = UnitOfWork.Bookings.Find(booking => booking.ByUser == userId)
+                    .Select(m => Mapper.Map<Booking, BookingDTO>(m))
+                    .ToList();
                 result.SetSuccessResult(bookings);
             }
             catch (Exception e)

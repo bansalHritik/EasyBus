@@ -1,16 +1,15 @@
-﻿using EasyBus.Shared.Functional;
+﻿using EasyBus.Business.Business_Data_Components.Interfaces.Business;
+using EasyBus.Data.Contexts;
+using EasyBus.Shared.Functional;
 using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
+using EasyBus.Shared.Infrastructure.Constants;
 using EasyBus.Shared.Infrastructure.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace EasyBus.Controllers
 {
@@ -18,13 +17,17 @@ namespace EasyBus.Controllers
     [ApiController]
     public class StopsController : ControllerBase
     {
-
         private readonly IStopBDC StopBDC;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserBDC userBDC;
 
-        public StopsController(IStopBDC stopsBDC)
+        public StopsController(IStopBDC stopsBDC, UserManager<ApplicationUser> userManager, IUserBDC user)
         {
             StopBDC = stopsBDC;
+            this.userManager = userManager;
+            userBDC = user;
         }
+
         #region Private Response handling methods.
 
         private IActionResult GetResponse<T>(OperationResult<T> operationResult)
@@ -68,23 +71,27 @@ namespace EasyBus.Controllers
         }
 
         #endregion Private Response handling methods.
-        
+
         [HttpGet]
         public IActionResult Get(int id)
         {
+            var email = this.GetCurrentUser();
+            var a = userBDC.GetUser(email);
             return GetResponse(StopBDC.Get(id));
         }
 
-        
         [HttpGet("GetAll")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         public IActionResult GetAll()
-       {
-            var isUserAuth = User.Identity.Name;
+        {
+            var email = this.GetCurrentUser();
+            var a = userBDC.GetUser(email);
             return GetResponse(StopBDC.GetAll());
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
+
         public IActionResult Update(int id, NewStopModel newStop)
         {
             StopDTO stopDTO = new()
@@ -95,6 +102,8 @@ namespace EasyBus.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
+
         public IActionResult New(NewStopModel newStop)
         {
             StopDTO stopDTO = new()
@@ -103,7 +112,10 @@ namespace EasyBus.Controllers
             };
             return GetResponse(StopBDC.Add(stopDTO));
         }
+
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
+
         public IActionResult Delete(int stopId)
         {
             return GetResponse(StopBDC.Remove(stopId));

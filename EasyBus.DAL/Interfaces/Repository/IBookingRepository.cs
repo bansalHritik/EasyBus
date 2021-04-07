@@ -1,6 +1,8 @@
 ﻿using EasyBus.Data.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace EasyBus.Shared.Repository
 {
@@ -10,6 +12,6 @@ namespace EasyBus.Shared.Repository
 
         new IEnumerable<Booking> GetAll();
 
-        
+        new IEnumerable<Booking> Find(Expression<Func<Booking, bool>> predicate);
     }
 }

@@ -8,5 +8,7 @@ namespace EasyBus.Models
 
         public IEnumerable<string> Errors { get; set; }
         public string Token { get; set; }
+
+        public string[] Roles { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using EasyBus.Data.Contexts;
+﻿using EasyBus.DAL.Interfaces.Repository;
+using EasyBus.DAL.Repository;
+using EasyBus.Data.Contexts;
 using EasyBus.Data.Repository;
 using EasyBus.Shared.Repository;
 using EasyBus.Shared.Repository.Core;
@@ -27,6 +29,7 @@ namespace EasyBus.Persistence
             Routes = new RouteRepository(_context);
             BusRoutes = new BusRouteRepository(_context);
             Bookings = new BookingRepository(_context);
+            Users = new UserRepository(_context);
         }
 
         /// <summary>
@@ -50,6 +53,9 @@ namespace EasyBus.Persistence
         public IBookingRepository Bookings { get; }
 
         public IRouteRepository Routes { get; }
+        public IUserRepository Users { get; }
+
+
 
         /// <summary>
         /// The Complete.

@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using EasyBus.Shared.Functional;
+﻿using EasyBus.Shared.Functional;
 using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
+using EasyBus.Shared.Infrastructure.Constants;
 using EasyBus.Shared.Infrastructure.DTOs;
-using EasyBus.Shared.Repository.Core;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -16,7 +16,6 @@ namespace EasyBus.Controllers
     {
         #region Properties
 
-        
         private readonly IRouteBDC RouteBDC;
 
         public RoutesController(IRouteBDC routeBDC)
@@ -24,9 +23,7 @@ namespace EasyBus.Controllers
             RouteBDC = routeBDC;
         }
 
-
         #endregion Properties
-
 
         // GET api/<RoutesController>/5
         [HttpGet("{id}")]
@@ -37,6 +34,7 @@ namespace EasyBus.Controllers
         }
 
         [HttpGet("GetAll")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult GetAll()
         {
             OperationResult<IEnumerable<RouteDTO>> result = RouteBDC.GetAll();
@@ -44,10 +42,11 @@ namespace EasyBus.Controllers
         }
 
         // POST api/<RoutesController>
+
         [HttpPost]
-        public IActionResult Post([FromBody] NewRouteModel newRoute)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
+        public IActionResult New([FromBody] NewRouteModel newRoute)
         {
-            
             OperationResult result = RouteBDC.Add(newRoute);
             return this.GetResponse(result);
         }
@@ -67,6 +66,7 @@ namespace EasyBus.Controllers
 
         // DELETE api/<RoutesController>/5
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult Delete(int id)
         {
             return this.GetResponse(RouteBDC.Remove(id));

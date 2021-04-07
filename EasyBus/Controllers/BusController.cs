@@ -2,7 +2,10 @@
 using EasyBus.Shared.Functional;
 using EasyBus.Shared.Infrastructure.Business;
 using EasyBus.Shared.Infrastructure.Business.Models;
+using EasyBus.Shared.Infrastructure.Constants;
 using EasyBus.Shared.Infrastructure.DTOs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -31,6 +34,7 @@ namespace EasyBus.Controllers
 
         // api/bus/new
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult New(NewBusModel newBus)
         {
             BusDTO busDTO = new()
@@ -61,6 +65,7 @@ namespace EasyBus.Controllers
 
         // api/bus/getAll
         [HttpGet("GetAll")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult GetAll()
         {
             OperationResult<IEnumerable<BusDTO>> result = BusBDC.GetAll();
@@ -68,8 +73,8 @@ namespace EasyBus.Controllers
             return response;
         }
 
-        // TODO: ONLY ADMIN
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult UpdateBus(int id, NewBusModel newBus)
         {
             BusDTO bus = new()
@@ -85,6 +90,7 @@ namespace EasyBus.Controllers
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = UserRoles.ADMIN)]
         public IActionResult Remove(int id)
         {
             OperationResult result = BusBDC.Remove(id);
