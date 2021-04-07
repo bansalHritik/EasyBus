@@ -80,7 +80,7 @@ namespace EasyBus.Controllers
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAll()
        {
-            
+            var isUserAuth = User.Identity.Name;
             return GetResponse(StopBDC.GetAll());
         }
 

@@ -13,4 +13,8 @@
     <ProjectReference Include="..\EasyBus.Shared\EasyBus.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Business Data Components\Interfaces\Business\Models\" />
+  </ItemGroup>
+
 </Project>

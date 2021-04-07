@@ -28,7 +28,7 @@ namespace EasyBus.Controllers
         }
 
         [HttpPost("Signup")]
-        public async Task<IActionResult> Register([FromBody]UserRegistrationModel user)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationModel user)
         {
             var userInDB = await userManager.FindByEmailAsync(user.Username);
             if (userInDB != null)
@@ -64,29 +64,31 @@ namespace EasyBus.Controllers
             if (!isPasswordCorrect)
             {
                 return Unauthorized();
-
             }
             string token = GenerateToken(userInDb);
-            return Ok(new AuthenticationResponse {
-                Successful= true,
+            return Ok(new AuthenticationResponse
+            {
+                Successful = true,
                 Token = token,
             });
-
         }
+
         private string GenerateToken(IdentityUser user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
 
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new[] {
+            var claimsIdentity = new ClaimsIdentity(new[] {
                     new Claim("Id", user.Id),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
+                });
+
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = claimsIdentity,
                 Expires = DateTime.UtcNow.AddHours(6),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
             };

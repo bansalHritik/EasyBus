@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using EasyBus.Data.Models;
-using EasyBus.Models;
+﻿using EasyBus.Data.Models;
 using EasyBus.Shared.Functional;
 using EasyBus.Shared.Infrastructure.Business;
+using EasyBus.Shared.Infrastructure.Business.Models;
 using EasyBus.Shared.Infrastructure.DTOs;
-using EasyBus.Shared.Repository.Core;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -17,20 +14,14 @@ namespace EasyBus.Controllers
     {
         #region Properties
 
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IMapper _mapper;
         private readonly IBusBDC BusBDC;
 
         #endregion Properties
 
-        
-
         #region Constructors
 
-        public BusController(IUnitOfWork unitOfWork, IMapper mapper, IBusBDC busBDC)
+        public BusController(IBusBDC busBDC)
         {
-            this.unitOfWork = unitOfWork;
-            _mapper = mapper;
             BusBDC = busBDC;
         }
 
@@ -38,6 +29,7 @@ namespace EasyBus.Controllers
 
         #region Public API Methods
 
+        // api/bus/new
         [HttpPost]
         public IActionResult New(NewBusModel newBus)
         {
@@ -58,7 +50,8 @@ namespace EasyBus.Controllers
             return response;
         }
 
-        [HttpGet]
+        // api/bus/get
+        [HttpGet("Get")]
         public IActionResult Get(int id)
         {
             OperationResult<BusDTO> result = BusBDC.Get(id);
@@ -66,8 +59,8 @@ namespace EasyBus.Controllers
             return response;
         }
 
-        [HttpGet]
-        [Route("GetAll")]
+        // api/bus/getAll
+        [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
             OperationResult<IEnumerable<BusDTO>> result = BusBDC.GetAll();
